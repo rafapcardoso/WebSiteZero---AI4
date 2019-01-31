@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+
+{if isset($background)}
+<html lang="pt-br" xml:lang="pt-br" style='background: url({$background}) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;'>
+{else}
+<html lang="pt-br" xml:lang="pt-br">
+{/if}
+
+<head>
+	<!-- Logged Dashboard 2 -->
+    <meta charset="utf-8">
+    <meta property="og:site_name" content="RPAP"/>
+    <meta property="og:title" content="Resolução de Problemas Avançados e Processos de Alta Performance"/>
+    <meta property="og:description" content="Iinvestigações técnicas e Resolução de Problemas Avançados, também com Otimização de processos de manufatura ou administrativos como Lean Office e Lean Manufacturing"/>
+    <meta property="og:image" content="{$HARDCODE_STYLESHEET}{$CLIENT}Images/SharedImage.png">
+	<meta property="og:url" content="http://www.rpap.com.br/">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Serviços para empresas, resolução de problemas avançados, lean Manufacturing e coaching executivo">
+	<meta name="robots" content="index, follow">
+	<title>RPAP - Resolução de Problemas Avançados e Processos de Alta Performance</title>
+	
+	<link rel="stylesheet" type="text/css" href="{$CSS}" media="screen">
+	{if !empty($CSSstyles)} {foreach from=$CSSstyles item=one} {if $one['address'] ne ""}
+	<link rel="stylesheet" type="text/css" href="{$one['address']}" media="{$one['media']}">
+	{/if} {/foreach} {/if}
+	
+	<link rel="icon" type="image/png" href="{$ROOT}{$CLIENT}Images/FavIcon_32x32.png" sizes="32x32">
+	
+	<!-- Bootstrap -->
+    {if $WEBSERVICE_ADDR|stripos:"localhost" > 0 }
+		<link rel="stylesheet" type="text/css" href="https://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css">
+	{else}
+		<link rel="stylesheet" type="text/css" href="https://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css">
+	{/if}
+		
+	<!-- GoogleFonts -->
+	{if !empty($GoogleFonts)} {foreach from=$GoogleFonts item=one}
+	<link rel="stylesheet" type="text/css" href="{$one}">
+	{/foreach} {/if}
+	
+	<!-- HeaderScripts -->
+	{foreach from=$HeaderJavaScripts item=oneScript}
+	<script src="{$oneScript}"></script>
+	{/foreach}
+
+</head>
+
+{if isset($InitializeJavaScripts)}
+<script>
+<!-- InitializeScripts -->
+	function initialize() {
+		{
+			$InitializeJavaScripts
+		}
+	}
+</script>
+{/if}
+
+<body>
+{if isset($mainmenu)} {$mainmenu} {/if} {$content}
+
+    <!-- Bootstrap core JavaScript  ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    {if $WEBSERVICE_ADDR|stripos:"localhost" > 0 }
+		<script>window.jQuery || document.write('<script src="./bootstrap_4.1.3/js/vendor/jquery-slim.min.js"><\/script>')</script>
+	    <script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
+	    <script src="https://getbootstrap.com/docs/4.1/dist/js/bootstrap.min.js"></script>
+	{else}
+		<script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+	    <script src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
+	    <script src="https://getbootstrap.com/docs/4.1/dist/js/bootstrap.min.js"></script>
+    {/if}
+    
+</body>
+
+<!-- FooterScripts -->
+{foreach from=$FooterJavaScripts item=oneScript}
+<script src="{$oneScript}"></script>
+{/foreach}
+
+</html>

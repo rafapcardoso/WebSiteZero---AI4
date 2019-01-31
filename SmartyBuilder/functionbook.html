@@ -1,0 +1,137 @@
+
+{* PAGINATION *}
+{function name=pagination}
+
+	{$list = $data[0]}
+	{$add = $data[1]}
+
+	{if $list->totalpages gt 1}
+		{assign var="address" value="$add"}
+
+		{* PREPARING ADDRESS *}
+		{if $address|strstr:"?"}{assign var="address" value= $address|cat:"&page="}
+		{else}{assign var="address" value= $address|cat:"?page="}{/if}
+
+		{assign var="filter" value=""}
+		{if isset($filter1value)}{assign var="filter" value= $filter|cat:"&filter1=$filter1value" }{/if}
+		{if isset($filter2value)}{assign var="filter" value= $filter|cat:"&filter2=$filter2value" }{/if}
+		{if isset($filter3value)}{assign var="filter" value= $filter|cat:"&filter3=$filter3value" }{/if}
+
+		{if $list->totalpages lte 5}
+			<nav>
+				<ul class="pagination">
+					{for $page=1 to $list->totalpages}
+					{if $list->actualpage eq $page}<li class="active">{else}<li>{/if}<a href="{$address|cat: $page}{$filter}">{$page}<span class="sr-only">(current)</span></a></li>
+					{/for}
+				</ul>
+			</nav>
+		{else}
+			{if $list->actualpage lte 2}
+				{$start = 1}
+			{/if}
+			{if $list->actualpage gt 2}
+				{$start = $list->actualpage - 2}
+			{/if}
+			<nav>
+				<ul class="pagination">
+					{assign var='previous' value=($list->actualpage-1)}
+					{if $list->actualpage neq 1}<li><a href="{$address|cat:$previous}{$filter}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>{/if}
+					{for $page=$start to $list->totalpages max=5}
+					{if $list->actualpage eq $page}<li class="active">{else}<li>{/if}<a href="{$address|cat: $page}{$filter}">{$page}<span class="sr-only">(current)</span></a></li>
+					{/for}
+					{assign var='next' value=($list->actualpage+1)}
+					{if $list->actualpage neq $list->totalpages}<li><a href="{$address|cat:$next}{$filter}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>{/if}
+				</ul>
+			</nav>
+		{/if}
+	{/if}
+{/function}
+
+{* MAKE CHART SETS *}
+{* http://www.chartjs.org/docs/#bar-chart-introduction *}
+{function makeChartSets}
+	{$chartnumber = $data[0]}
+	{$variantarray = $data[1]}
+	{if isset($data[2])}{$color1 = $data[2]}{else}{$color1 = [180,180,180]}{/if}
+	{if isset($data[3])}{$color2 = $data[3]}{else}{$color2 = [151,18,255]}{/if}
+	{if isset($data[4])}{$color3 = $data[4]}{else}{$color3 = [151,187,205]}{/if}
+
+	{* Check if minimum variables are set *}
+	{if isset($variantarray->x) && isset($variantarray->y1)}
+
+		var GlobalLabels{$chartnumber} = [{', '|implode:$variantarray->x}];
+		{if $variantarray->y2|count eq 0}
+			var GlobalDataset{$chartnumber} = [
+				{	fillColor : "rgba({$color1[0]},{$color1[1]},{$color1[2]},0.5)",
+					strokeColor : "rgba({$color1[0]},{$color1[1]},{$color1[2]},0.8)",
+					highlightFill: "rgba({$color1[0]},{$color1[1]},{$color1[2]},0.75)",
+					highlightStroke: "rgba({$color1[0]},{$color1[1]},{$color1[2]},1)",
+					data :  [{', '|implode:$variantarray->y1}]
+				} ];
+		{else}
+			var GlobalDataset{$chartnumber} = [
+			{
+				label: '{$variantarray->ylabels[0]}',
+				fillColor : "rgba({$color1[0]},{$color1[1]},{$color1[2]},0.5)",
+				strokeColor : "rgba({$color1[0]},{$color1[1]},{$color1[2]},0.8)",
+				highlightFill: "rgba({$color1[0]},{$color1[1]},{$color1[2]},0.75)",
+				highlightStroke: "rgba({$color1[0]},{$color1[1]},{$color1[2]},1)",
+				data :  [{', '|implode:$variantarray->y1}]
+			}
+			,{
+				label: '{$variantarray->ylabels[1]}',
+				fillColor : "rgba({$color2[0]},{$color2[1]},{$color2[2]},0.5)",
+				strokeColor : "rgba({$color2[0]},{$color2[1]},{$color2[2]},0.8)",
+				highlightFill: "rgba({$color2[0]},{$color2[1]},{$color2[2]},0.75)",
+				highlightStroke: "rgba({$color2[0]},{$color2[1]},{$color2[2]},1)",
+				data :  [{', '|implode:$variantarray->y2}]
+			}
+			{if $variantarray->y3|count gt 0}
+				,{
+					label: '{$variantarray->ylabels[2]}',
+					fillColor : "rgba({$color3[0]},{$color3[1]},{$color3[2]},0.5)",
+					strokeColor : "rgba({$color3[0]},{$color3[1]},{$color3[2]},0.8)",
+					highlightFill: "rgba({$color3[0]},{$color3[1]},{$color3[2]},0.75)",
+					highlightStroke: "rgba({$color3[0]},{$color3[1]},{$color3[2]},1)",
+					data :  [{', '|implode:$variantarray->y3}]
+				}
+			{/if}
+		];
+		{/if}
+		var barChartData{$chartnumber} = { 	labels : GlobalLabels{$chartnumber},	datasets : GlobalDataset{$chartnumber} }
+	{else}
+		<p>Variables x and y1 not identified in chart number: {$chartnumber}</p>
+	{/if}
+{/function}
+
+{* CHART BARS *}
+{function makeChart_Bars}
+	var ctx{$chartnumber} = document.getElementById("chart{$chartnumber}").getContext("2d");
+	window.myBar{$chartnumber} = new Chart(ctx{$chartnumber}).Bar(barChartData{$chartnumber}, {		responsive : true, scaleBeginAtZero : true		});
+{/function}
+
+{* CHART LINE *}
+{function makeChart_Lines}
+	var ctx{$chartnumber} = document.getElementById("chart{$chartnumber}").getContext("2d");
+	window.myBar{$chartnumber} = new Chart(ctx{$chartnumber}).Line(barChartData{$chartnumber}, {		responsive : true,datasetFill : false,datasetStrokeWidth : 4	});
+{/function}
+
+{* CHART LINE *}
+{function makeChart_Pies}
+	var ctx{$chartnumber} = document.getElementById("chart{$chartnumber}").getContext("2d");
+	window.myBar{$chartnumber} = new Chart(ctx{$chartnumber}).Pie(barChartData{$chartnumber}, {		responsive : true	});
+{/function}
+
+{* CHART DEFAULT *}
+{function ChartDefaultOptions}
+	{literal}
+	Chart.defaults.global.pointHitDetectionRadius = 1;
+	Chart.defaults.global.multiTooltipTemplate = "<%if (label){%><%=datasetLabel%> <%}%><%= value %>";
+	Chart.defaults.global.showInLegend= true;
+	Chart.defaults.global.scaleFontSize= 20;
+	Chart.defaults.global.tooltipTitleFontSize= 20;
+	Chart.defaults.global.scaleFontStyle= "normal";
+	Chart.defaults.global.datasetFill= 0;
+	{/literal}
+{/function}
+

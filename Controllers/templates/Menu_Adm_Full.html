@@ -1,0 +1,79 @@
+{* FUNCTIONS *}
+{function name=drawsubmenu}
+	{foreach from=$submenuarray item=submenu}
+		
+		{if empty($submenu->addr) && !empty($submenu->submenu)  }
+			<a class="dropdown-item {if isset($submenuclass)}{$submenuclass}{/if}" href="#">{$mainmenu->nome} !</a>
+				<div class="dropdown-divider"></div>
+				{drawsubmenu submenuarray=$submenu->submenu submenuclass='submenu-level2'}
+				<div class="dropdown-divider"></div>
+		{else}
+			<a class="dropdown-item {if isset($submenuclass)}{$submenuclass}{/if} {if isset($submenu->selected)}{if $submenu->selected eq true}navbar-active{/if}{/if}" 
+			   href="{if isset($submenu->addr)}{$submenu->addr}{else}#{/if}" 
+			   {if isset($submenu->id)}id="{$submenu->id}"{/if}>{$submenu->nome}</a>
+		{/if}
+		
+	{/foreach}
+	
+{/function}
+
+{function drawmenu }
+<li class="nav-item {if isset($mainmenu->submenu)}dropdown{/if}">           
+	<a class="nav-link {if isset($mainmenu->submenu)}dropdown-toggle{/if}"
+		href="{if isset($mainmenu->addr)}{$mainmenu->addr}{else}#{/if}"
+		{if isset($mainmenu->submenu)}
+			id="id_{$mainmenu->nome}"
+			data-toggle="dropdown" aria-expanded="false" aria-haspopup="true"
+		{/if}>{$mainmenu->nome}</a>
+		
+	{if isset($mainmenu->submenu)}
+	<div class="dropdown-menu" aria-labelledby="id_{$mainmenu->nome}">
+		{drawsubmenu submenuarray=$mainmenu->submenu submenuclass='submenu-level1'}
+	</div>
+	{/if}
+</li>
+{/function}
+
+
+{* CONTENT *}
+<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
+   	<!-- LOGO -->
+   	{if $largeheader eq 1}
+		<div class="navba navbar_brand">
+			<img class="header_logo_large" src="{$mainlogo}">
+		</div>
+		<a id='brand' data-toggle='brand_popover' data-content='logo' data-title='logo' data-placement="bottom" class="navbar-brand"  href="{$HARDCODE_STYLESHEET}MainScreen">{$leftMenuName}</a>
+	{else}
+  		<a id='brand' class="navbar-brand" href="{$HARDCODE_STYLESHEET}MainScreen"><img alt="{$leftMenuName}" class="header_logo_short"  src="{$mainlogo}"></a>
+	{/if}
+	
+	<!-- MENU -->
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+			{if isset($menuarray)}{foreach from=$menuarray item=mainmenu}
+		{drawmenu data=$mainmenu}
+	{/foreach}{/if}
+        <li class="nav-item">
+          <a class="nav-link" href="{$HARDCODE_STYLESHEET}Login?def=Logout">SAIR</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+{if isset($Success)}
+<div class="alert alert-success" role="alert">{$Success}</div>
+{/if}
+{if isset($Warning)}
+<div class="alert alert-warning" role="alert">{$Warning}</div>
+{/if}
+{if isset($Danger)}
+<div class="alert alert-danger" role="alert">{$Danger}</div>
+{/if}
+{if isset($Message)}
+<div class="alert alert-default" role="alert">{$Message}</div>
+{/if}

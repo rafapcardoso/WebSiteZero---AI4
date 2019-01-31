@@ -1,0 +1,42 @@
+.header{
+	/*background: -webkit-linear-gradient(white, #3F7EDC);  For Safari 5.1 to 6.0 */
+	/*background: -o-linear-gradient(white, #3F7EDC);  For Opera 11.1 to 12.0 */
+	/*background: -moz-linear-gradient(white, #3F7EDC);  For Firefox 3.6 to 15 */
+	/*background: linear-gradient(white, #3F7EDC);  Standard syntax */
+}
+
+/* SIDE BAR WRAPPER MENU*/
+#sidebar-wrapper {
+	background-color: white;
+}
+
+#sidebar-wrapper li a{
+	color: #7F7F7F;
+	font-family: 'Dosis', sans-serif;
+	font-size: 130%;
+
+}
+
+#sidebar-wrapper li a:hover,
+#sidebar-wrapper li a:active,
+#sidebar-wrapper li a:focus{
+	background-color: #3F7EDC;
+	color: white;
+}
+
+/*HORIZONTAL MAIN MENU*/
+.navbar-default{
+	/*background-color:rgba(255,155,200,1);*/
+}
+.navbar-collapse{
+	/*background-color:rgba(255,255,255,1);*/
+}
+.dropdown-header{
+	background-color: rgb(242,242,242);
+	color: rgb(202,202,202);
+}
+/* CONTENT */
+.boxmenu{
+	box-shadow: inset 0px -2px 0px #D6D6D6;
+	}
+

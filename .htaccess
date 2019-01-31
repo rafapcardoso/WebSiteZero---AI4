@@ -1,0 +1,21 @@
+#old RewriteEngine On
+
+#old RewriteRule .? - [E=TempAuth:%{HTTP:TempAuth}]
+# See more at: http://www.omaroid.com/php-get-and-set-custom-http-headers/#sthash.kZ4yjCZe.dpuf
+
+# Some hosts may require you to use the `RewriteBase` directive.
+# If you need to use the `RewriteBase` directive, it should be the
+# absolute physical path to the directory that contains this htaccess file.
+#
+#RewriteBase
+
+#old RewriteCond %{REQUEST_FILENAME} !-f
+#old RewriteRule ^ index.php [QSA,L]
+
+RewriteEngine On RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^(.*)$ index.php?/$1 [L]
